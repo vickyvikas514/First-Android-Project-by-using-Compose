@@ -3,10 +3,8 @@ package com.example.basicscodelab
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,13 +36,28 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun Greeting(name: String) {
+
     androidx.compose.material3.Surface(color = MaterialTheme.colorScheme.primary,
-    modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)) {
-        //Use Column modifier to write text vertically line by line
-        Column(modifier = Modifier.fillMaxWidth().padding(24.dp)) {
-            Text(text = "Hii, ")
-            Text(text = name)
+    modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+    ){
+        Row(modifier = Modifier.padding(24.dp)) {
+
+            Column(modifier = Modifier
+                .weight(1f)
+                ) {
+                
+                Text(text = "Hii, ")
+                Text(text = name)
+            }
+            ElevatedButton(onClick = { /*TODO*/
+            } )
+            {
+                Text(text = "Expand")
+            }
+            
         }
+        //Use Column modifier to write text vertically line by line
+
 
 
     }
