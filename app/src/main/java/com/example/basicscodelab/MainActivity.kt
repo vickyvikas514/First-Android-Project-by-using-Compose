@@ -24,7 +24,12 @@ import androidx.compose.ui.Alignment
 
 
 @Composable
-fun OnboardingScreen(modifier: Modifier = Modifier) {
+fun OnboardingScreen(
+    //function parameter to the onboarding screen defined as onContinueClicked: () -> Unit
+    // so you can mutate the state from MyApp.
+    onContinueClicked: () -> Unit,
+                     modifier: Modifier = Modifier,
+) {
     // TODO: This state should be hoisted
     var shouldShowOnboarding by remember { mutableStateOf(true) }
 
@@ -36,7 +41,7 @@ fun OnboardingScreen(modifier: Modifier = Modifier) {
         Text("Welcome to the Basics Codelab!")
         Button(
             modifier = Modifier.padding(vertical = 24.dp),
-            onClick = { shouldShowOnboarding = false }
+            onClick =onContinueClicked
         ) {
             Text("Continue")
         }
@@ -47,7 +52,10 @@ fun OnboardingScreen(modifier: Modifier = Modifier) {
 @Composable
 fun OnboardingPreview() {
     BasicsCodelabTheme {
-        OnboardingScreen()
+        OnboardingScreen(onContinueClicked = {}
+        )
+        //Assinged empty lamda expression to on ContinueClicked
+    // means it do nothing which we need!
     }
 }
 
@@ -106,13 +114,14 @@ private fun Greeting(name: String) {
 }
 
 @Composable
-fun MyApp(
-    modifier: Modifier = Modifier,
-    names: List<String> = listOf("World", "Compose")
-) {
-    Column(modifier=modifier.padding(vertical = 4.dp)) {
-        for (name in names) {
-           Greeting(name = name)
+fun MyApp(modifier: Modifier = Modifier) {
+    var shouldShowOnboarding by remember { mutableStateOf(true) }
+
+    Surface(modifier) {
+        if (shouldShowOnboarding) {
+            OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false })
+        } else {
+            Greetings()
         }
     }
 }
@@ -120,8 +129,28 @@ fun MyApp(
 
 @Preview(showBackground = true, widthDp = 320)
 @Composable
-fun DefaultPreview() {
+fun GreetingsPreview() {
     BasicsCodelabTheme {
-        MyApp()
+        Greetings()
+    }
+}
+
+@Composable
+private fun Greetings(
+    modifier: Modifier = Modifier,
+    names: List<String> = listOf("World", "Compose")
+){
+    Column(modifier=modifier.padding(vertical = 4.dp)) {
+        for (name in names) {
+            Greeting(name = name)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun MyAppPreview() {
+    BasicsCodelabTheme {
+        MyApp(Modifier.fillMaxSize())
     }
 }
