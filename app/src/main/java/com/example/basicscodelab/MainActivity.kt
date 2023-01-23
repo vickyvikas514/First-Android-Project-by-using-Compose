@@ -16,6 +16,40 @@ import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.basicscodelab.ui.theme.BasicsCodelabTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material3.Button
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+
+
+@Composable
+fun OnboardingScreen(modifier: Modifier = Modifier) {
+    // TODO: This state should be hoisted
+    var shouldShowOnboarding by remember { mutableStateOf(true) }
+
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Welcome to the Basics Codelab!")
+        Button(
+            modifier = Modifier.padding(vertical = 24.dp),
+            onClick = { shouldShowOnboarding = false }
+        ) {
+            Text("Continue")
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320, heightDp = 320)
+@Composable
+fun OnboardingPreview() {
+    BasicsCodelabTheme {
+        OnboardingScreen()
+    }
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +61,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    MyApp()
                 }
             }
         }
