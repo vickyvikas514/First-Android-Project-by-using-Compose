@@ -1,11 +1,13 @@
 package com.example.basicscodelab
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
 
 
 @Composable
@@ -71,8 +74,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            //BasicsCodelabTheme is present in ui.theme it contain material theme
+            //which decide the theme for app
             BasicsCodelabTheme {
-                // A surface container using the 'background' color from the theme
+                // A surface container ..
+                // used background's color for the themining of this app
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -98,7 +104,8 @@ private fun Greeting(name: String) {
         if(expanded) 48.dp else 0.dp,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
+            stiffness = Spring.StiffnessLow,
+
         )
 
     )
@@ -117,7 +124,10 @@ private fun Greeting(name: String) {
                 ) {
                 
                 Text(text = "Hii, ")
-                Text(text = name)
+                //"style "is used to style the text
+                Text(text = name, style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.ExtraBold
+                ))
             }
             ElevatedButton(
                 onClick = { expanded = !expanded }
@@ -170,8 +180,19 @@ private fun Greetings(
     }
 
 }
+//want to change colors GO TO
+//Theme.kt
+//Color.kt
+//and change
+@Preview(
+    showBackground = true,
+    widthDp = 320,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "DarkMode"
+)
 
-@Preview
+
+//@Preview
 @Composable
 fun MyAppPreview() {
     BasicsCodelabTheme {
