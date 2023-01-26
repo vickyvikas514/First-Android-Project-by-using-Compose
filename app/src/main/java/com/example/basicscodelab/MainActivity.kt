@@ -89,18 +89,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun Greeting(name: String) {
 
-    var expanded by rememberSaveable { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 //added animation
     //animateDpAsState takes target value whose value is in dp
+    //animation spec help you to coustomize your app
+    //added spring effect
     val extrapadding by animateDpAsState(
-        if(expanded) 48.dp else 0.dp
-    ,
-        //animation spec help you to coustomize your app
-        //added spring effect
-    animationSpec = spring(
-        dampingRatio = Spring.DampingRatioHighBouncy,
-        stiffness = Spring.StiffnessLow
-    )
+        if(expanded) 48.dp else 0.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+
     )
 
 
@@ -111,7 +111,9 @@ private fun Greeting(name: String) {
 
             Column(modifier = Modifier
                 .weight(1f)
-                .padding(bottom = extrapadding)
+                    //padding can't be negative so we use coerceAtLeast
+                    //otherwise app crashes
+                .padding(bottom = extrapadding.coerceAtLeast(0.dp))
                 ) {
                 
                 Text(text = "Hii, ")
