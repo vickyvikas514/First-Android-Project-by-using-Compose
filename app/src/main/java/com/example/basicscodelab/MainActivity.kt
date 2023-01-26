@@ -3,6 +3,9 @@ package com.example.basicscodelab
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +24,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 
@@ -33,7 +37,9 @@ fun OnboardingScreen(
                      modifier: Modifier = Modifier,
 ) {
     // TODO: This state should be hoisted
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
+    //by rememberSaveable UI does not initialsie
+    // itself each time when we rotate the device
+    var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -83,9 +89,20 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun Greeting(name: String) {
 
-    val expanded = remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
+//added animation
+    //animateDpAsState takes target value whose value is in dp
+    val extrapadding by animateDpAsState(
+        if(expanded) 48.dp else 0.dp
+    ,
+        //animation spec help you to coustomize your app
+        //added spring effect
+    animationSpec = spring(
+        dampingRatio = Spring.DampingRatioHighBouncy,
+        stiffness = Spring.StiffnessLow
+    )
+    )
 
-    val extrapadding = if(expanded.value) 48.dp else 0.dp
 
     androidx.compose.material3.Surface(color = MaterialTheme.colorScheme.primary,
     modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
@@ -101,9 +118,9 @@ private fun Greeting(name: String) {
                 Text(text = name)
             }
             ElevatedButton(
-                onClick = { expanded.value = !expanded.value }
+                onClick = { expanded = !expanded }
             ) {
-                Text(if (expanded.value) "Show less" else "Show more")
+                Text(if (expanded) "Show less" else "Show more")
             }
             
         }
