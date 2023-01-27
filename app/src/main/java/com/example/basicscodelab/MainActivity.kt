@@ -4,15 +4,12 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,12 +21,20 @@ import com.example.basicscodelab.ui.theme.BasicsCodelabTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+
+
+
+
 
 
 @Composable
@@ -71,6 +76,7 @@ fun OnboardingPreview() {
 }
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -91,35 +97,38 @@ class MainActivity : ComponentActivity() {
 }
 
 
-
 @Composable
 private fun Greeting(name: String) {
 
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 //added animation
     //animateDpAsState takes target value whose value is in dp
     //animation spec help you to coustomize your app
     //added spring effect
     val extrapadding by animateDpAsState(
         if(expanded) 48.dp else 0.dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow,
 
-        )
 
     )
-
-
-    androidx.compose.material3.Surface(color = MaterialTheme.colorScheme.primary,
+     androidx.compose.material3.Surface(color = MaterialTheme.colorScheme.primary,
     modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ){
-        Row(modifier = Modifier.padding(24.dp)) {
+        Row(modifier = Modifier.padding(24.dp)
+                //Applied the animateContentSize modifier to the Row.
+            // This is going to automate the process of creating the animation, which would be hard to do manually.
+            // Also, it removes the need to coerceAtLeast
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow,
+
+                    )
+            )) {
 
             Column(modifier = Modifier
                 .weight(1f)
-                    //padding can't be negative so we use coerceAtLeast
-                    //otherwise app crashes
+                //padding can't be negative so we use coerceAtLeast
+                //otherwise app crashes
                 .padding(bottom = extrapadding.coerceAtLeast(0.dp))
                 ) {
                 
@@ -128,11 +137,29 @@ private fun Greeting(name: String) {
                 Text(text = name, style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.ExtraBold
                 ))
+                if(expanded){
+                    //Text added to the the box when it opened.
+                    Text(
+                        text = ("Composem ipsum color sit lazy, " +
+                                "padding theme elit, sed do bouncy. ").repeat(4),
+                    )
+                }
+
+
+               
             }
-            ElevatedButton(
+            //Removed Elelvated button and used Icon button
+            IconButton(
                 onClick = { expanded = !expanded }
             ) {
-                Text(if (expanded) "Show less" else "Show more")
+                Icon(
+                    imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                    contentDescription = if (expanded) {
+                        stringResource(R.string.show_less)
+                    } else {
+                        stringResource(R.string.show_more)
+                    }
+                )
             }
             
         }
